@@ -1,4 +1,4 @@
-package com.example.taskforge_auth;
+package com.taskforge.taskforge_auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
