@@ -2,6 +2,7 @@ package com.taskforge.taskforge_auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
