@@ -2,9 +2,7 @@ package com.taskforge.taskforge_auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
@@ -31,11 +29,10 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Project> ownedProjects;
-
-    @ManyToMany(mappedBy = "members")
-    private List<Project> memberProjects;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public enum Role {
         USER, ADMIN
