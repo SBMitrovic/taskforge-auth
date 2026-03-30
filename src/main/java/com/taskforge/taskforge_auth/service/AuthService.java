@@ -37,4 +37,9 @@ public class AuthService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+	public Object getAllUsers() {
+		
+		return userRepository.findAll();
+	}
 }

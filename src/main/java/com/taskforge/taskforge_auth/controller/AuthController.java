@@ -1,25 +1,40 @@
 package com.taskforge.taskforge_auth.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.taskforge.taskforge_auth.dto.AuthResponse;
 import com.taskforge.taskforge_auth.dto.LoginRequest;
 import com.taskforge.taskforge_auth.dto.RegisterRequest;
+import com.taskforge.taskforge_auth.dto.UserResponse;
 import com.taskforge.taskforge_auth.entity.User;
+import com.taskforge.taskforge_auth.repository.UserRepository;
 import com.taskforge.taskforge_auth.security.JwtUtil;
 import com.taskforge.taskforge_auth.service.AuthService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final UserRepository userRepository;
+	private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+
+	
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
@@ -65,5 +80,12 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(newToken, user.getUsername(), user.getRole().name()));
     }
     
-    
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> users = userRepository.findAll()
+            .stream()
+            .map(u -> new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getRole().name()))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
+    }
 }
